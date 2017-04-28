@@ -2,6 +2,7 @@
 title: "Exploratory Analysis with Data Mined from Twitter"
 fig_width: 6
 output:
+  pdf_document: default
   html_notebook: default
   html_document: default
 fig_height: 4
