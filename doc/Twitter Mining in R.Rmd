@@ -13,6 +13,8 @@ library(shiny)
 library(twitteR)
 library(wordcloud)
 library(tm)
+library(XML)
+library(RColorBrewer)
 source("../lib/Authenticate.R")
 ```
 
@@ -53,7 +55,7 @@ renderPlot({
     removeWords(x,c(unlist(strsplit(input$term," ")),stopwords())))
 
   wordcloud(corpus,colors = brewer.pal(8,name="Dark2")[4:8],
-            max.words = 300, scale=c(4,.3))
+            max.words = 300, scale=c(5,.2),min.freq = 2)
   })
 
 h4("Click 'Download' to download a .csv file with data on tweets requested")
