@@ -2,8 +2,8 @@
 title: "Exploratory Analysis with Data Mined from Twitter"
 fig_width: 6
 output:
-  html_document: default
   html_notebook: default
+  html_document: default
 fig_height: 4
 ---
   
@@ -100,3 +100,36 @@ Here are the ten most common negative words in the 3000 tweets about the Warrior
 load("../output/warriorsAll_neg.Rdata")
 head(warriorsAll_neg,10)
 ```
+
+  
+### Extension:  
+Analyzing Twitter data and meta-data allows us some insight into what people talk about and how they talk about them. Although we focused on the behavior and emotions of Cavaliers and Warriors fan, similar analyses can extend to other segments of Twitter users. We created a short interactive html notebook that takes a user-supplied term and searches Twitter's API for the user-specified number of tweets mentioning the term. The output is a data table of the latest 5 relevant tweets and a wordcloud based on the tweets. Additionally, the user can download a ```.csv``` file with data from ```status``` objects returned by ```searchTwitter()```. Below are screenshots of a few examples:  
+  
+**1) Term = "NBA"; nTweets = 5**  
+```{r,echo=F,include=T}
+ScreenShot_1 = readImage('../figs/ScreenShot_1.png') 
+display(ScreenShot_1,method="raster") 
+
+ScreenShot_2 = readImage('../figs/ScreenShot_2.png') 
+display(ScreenShot_2,method="raster") 
+```
+  
+**2) Term = "life"; nTweets = 5**  
+```{r,echo=F,include=T}
+ScreenShot_3 = readImage('../figs/ScreenShot_3.png') 
+display(ScreenShot_3,method="raster") 
+
+ScreenShot_4 = readImage('../figs/ScreenShot_4.png') 
+display(ScreenShot_4,method="raster") 
+```
+  
+**3) Term = "life"; nTweets = 123**  
+```{r,echo=F,include=T}
+ScreenShot_5 = readImage('../figs/ScreenShot_5.png') 
+display(ScreenShot_5,method="raster") 
+
+ScreenShot_6 = readImage('../figs/ScreenShot_6.png') 
+display(ScreenShot_6,method="raster") 
+```
+  
+  
