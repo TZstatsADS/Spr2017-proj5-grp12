@@ -4,6 +4,10 @@ output: html_document
 runtime: shiny
 ---
 
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+```
+
 ```{r,echo=F, include=F}
 library(shiny)
 library(twitteR)
