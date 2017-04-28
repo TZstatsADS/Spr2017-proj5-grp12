@@ -103,7 +103,7 @@ head(warriorsAll_neg,10)
 
   
 ### Extension:  
-Analyzing Twitter data and meta-data allows us some insight into what people talk about and how they talk about them. Although we focused on the behavior and emotions of Cavaliers and Warriors fan, similar analyses can extend to other segments of Twitter users. We created a short interactive html notebook that takes a user-supplied term and searches Twitter's API for the user-specified number of tweets mentioning the term. The output is a data table of the latest 5 relevant tweets and a wordcloud based on the tweets. Additionally, the user can download a ```.csv``` file with data from ```status``` objects returned by ```searchTwitter()```. Below are screenshots of a few examples:  
+Analyzing Twitter data and meta-data allows us some insight into what people talk about and how they talk about them. Although we focused on the behavior and emotions of Cavaliers fans and Warriors fan, similar analyses can extend to other segments of Twitter users. We created a short interactive html notebook (```Twitter Mining in R.Rmd```) that takes a user-supplied term and searches Twitter's API for the user-specified number of tweets mentioning the term. The output is a data table of the latest 5 relevant tweets and a wordcloud based on the tweets. Additionally, the user can download a ```.csv``` file with data from ```status``` objects returned by ```searchTwitter()```. Below are screenshots of a few examples:  
   
 **1) Term = "NBA"; nTweets = 5**  
 ```{r,echo=F,include=T}
