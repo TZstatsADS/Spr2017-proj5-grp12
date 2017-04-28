@@ -1,0 +1,63 @@
+---
+title: "Twitter Mining in R"
+output: html_document
+runtime: shiny
+---
+
+```{r,echo=F, include=F}
+library(shiny)
+library(twitteR)
+library(wordcloud)
+library(tm)
+source("../lib/Authenticate.R")
+```
+
+```{r, echo=F}
+
+  textInput("term", "Enter a term", "NBA")
+  sliderInput("nTweets", "Select a number of tweets",min=5,max=1500, value = 5)
+  submitButton(text = "Fetch Tweets")
+  downloadButton("download", "Download File")
+
+  h4("Last 5 tweets")
+  #tableOutput("table"),
+  #plotOutput("wordcl"))
+```
+
+```{r, echo=FALSE, include=TRUE}
+renderTable({
+    tweets <- searchTwitter(input$term, n=input$nTweets,lang="en")
+    tweets_df <- twListToDF(tweets)
+    head(tweets_df[1],n=5)
+  })
+
+renderPlot({
+  tweets <- searchTwitter(input$term, n=input$nTweets,lang="en")
+  tweets_df <- twListToDF(tweets)
+  feed <- tweets_df$text
+  
+  #clean data
+  feed = iconv(feed, "latin1", "ASCII", "byte")
+  feed <- gsub(" http.*","",feed)
+  feed <- gsub("[^\\@^\\#[:^punct:]]", "", feed, perl=T)
+  
+  corpus <- Corpus(VectorSource(feed))
+  #clean up
+  corpus <- tm_map(corpus,content_transformer(tolower))
+  corpus <- tm_map(corpus,function(x)removeNumbers(x))
+  corpus <-tm_map(corpus,function(x) 
+    removeWords(x,c(unlist(strsplit(input$term," ")),stopwords())))
+
+  wordcloud(corpus,colors = brewer.pal(8,name="Dark2")[4:8],
+            max.words = 300, scale=c(4,.3))
+  })
+
+h4("Click 'Download' to download a .csv file with data on tweets requested")
+downloadHandler(filename = paste(input$term,'.csv',sep=''),
+                content = function(file){
+                  tweets <- searchTwitter(input$term,                                         n=input$nTweets,lang="en")
+                  tweets_df <- twListToDF(tweets)
+                  write.csv(tweets_df, file)})
+
+```
+
