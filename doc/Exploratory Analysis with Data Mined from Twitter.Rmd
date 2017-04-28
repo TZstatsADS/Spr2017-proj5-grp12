@@ -1,0 +1,102 @@
+---
+title: "Exploratory Analysis with Data Mined from Twitter"
+fig_width: 6
+output:
+  html_document: default
+  html_notebook: default
+fig_height: 4
+---
+  
+This R notebook is to showcase examples of analyses that can be done based on Twitter-data and Twitter-meta-data.  
+  
+Let's focus on a more relevant topic, say the currently ongoing NBA Playoffs, since Twitter only makes recent tweets available. Additionally, not all teams are equal, in the sense that more popular teams will have more relevant Twitter activity and less popular teams will have less. So, let's compare the Twitter activity of the two teams in last year's NBA Playoff Finals - Cleveland Cavaliers & Golden State Warriors.  
+  
+**Note:** While Twitter allows a maximum of 3600 tweets to be grabbed at once, this is a slow process. Thus, we choose to grab n=3000 tweets whenever ```searchTwitter()``` from the ```twitteR``` package is called. Further, Twitter has restricted acces to its API, meaning too many requests to access Twitter's API in a short period of time leads to an error. There is no way to get around that, so we must be careful how many calls to access Twitter's API in a certain period of time we make. Otherwise, we have to wait, before trying again.  
+  
+### Charting When Tweets Were Created:  
+We may want to chronicle tweets from a given user's Timeline. Below, we chronicle the recent 3000 tweets on the official Cleveland Cavaliers Twitter and the recent 3000 tweets on the official Golden State Warriors Twitter. Also, we marked the dates corresponding to each team's playoff games. For the Warriors, as far as the last 4 games go, Twitter activity by official \@warriors seems to be concentrated in the time immediately following a game. For the Cavs, as far as the last 4 games go, Twitter activity by official \@cavs seems to more averagely spread across the time before, during, and after a game. Those tweets in between games, for both official team accounts, can probably be accounted for by promotional tweets, e.g. tweets promoting the sale of tickets. Seeing as how this is only the beginning of the Playoffs, i.e., Round 1, of course there is a high volume of tweets in the last few days reflecting the momentum of social media activity as hype for the successive games rises. As for the spread of tweets referencing either team by non-team-official accounts, it is expected that they would concentrate in the last few days, given the restriction of the number of tweets we're able to access. So, there is no significant conclusion that can be drawn from chronicling all Twitter user tweets about the Golden State Warriors and Cleveland Cavaliers.  
+```{r,echo=F,include=T}
+load("../output/war_cavs_created.Rdata")
+war_cavs_created
+```
+  
+### Breakdown of Tweets by the Hour:  
+We can look more in detail at tweets from the official \@warriors and \@cavs accounts based on hour of day. Again, from the 3000 tweets grabbed from Twitter, we plot the percentage of tweets as a function of the hour of the day (in Eastern Standard Time). Notice that the official \@cavs has its highest percentage of tweets posted between 1pm and 2pm. This seems to be related to the fact that 2 of the 4 Cavs games have been at 1pm and 3pm. Additionally, the second peak about 8pm is related to the other 2 games at 7pm. The higher peak between 1pm and 2pm can be attributed to the fact that those 2 early afternoon games were on the weekend. Thus, it makes sense that more people are free to watch weekend, rather than weekday, games. So, official at \@cavs may tweet more on the weekends to reach a larger audience. The same logic applies to the trend we see in the graph of percentage of tweets by hour for the Warriors. Since 3 of the 4 Warriors games were at 10:30pm, the greatest peak around midnight makes sense. The second peak is attributed to the 4th game that went on at 3pm. Officials for both the Cavs and Warriors are probably tweeting game highlights and recaps. 
+```{r,echo=F,include=T}
+load("../output/cavsO_byHR.Rdata")
+load("../output/warriorsO_byHR.Rdata")
+cavsO_byHr ; warriorsO_byHr
+```
+  
+Now here is the breakdown of tweets from non-team-official Twitter users. The Cavs won all four of their Round 1 games against the Pacers. But their first game on April 15 at 3pm was the closest, as Cavs beat Pacers by 1 point (109-108). So the hype of the first game and the close score would explain the highest peak of Twitter activity, except that tweets were from April 24th-26th. Without further information about Cavs fans (or at least those who tweet about the Cavs), we can't conclude anything about twitter users tweeting about the Cavs. Further, for those tweeting about the Warriors, we may speculate that the time difference between East Coast and West Coast contribute to the highest peak at noon EST. Since most fans of the Warriors are probably on Pacific Standard Time, for the context of when they're tweeting in the day, we should consider tweets in PST. So then, at around 9am PST, tweets about the Warriors are at the highest level. Perhaps, many fans don't watch the games in real-time, and watch recaps the next morning. That would certainly account for the morning tweets about the Warriors. Again, we have no way of knowing for certain without additional information about Twitter users' tweeting behavior.  
+```{r,echo=F,include=T}
+load("../output/cavsAll_byHR.Rdata")
+load("../output/warriorsAll_byHR.Rdata")
+cavsAll_byHr; warriorsAll_byHr
+```
+  
+### Wordcloud: 
+The following is a word cloud based on tweets about the Cavaliers:  
+```{r, echo=F,include=T}
+library(EBImage) 
+CavsCloud = readImage('../figs/CavsCloud.png') 
+display(CavsCloud,method="raster") 
+```
+  
+The following is a word cloud based on tweets about the Warriors:  
+```{r,echo=F,include=T}
+WarriorsCloud = readImage('../figs/WarriorsCloud.png') 
+display(WarriorsCloud,method="raster") 
+```
+
+### Frequently Used Words Among a Set of Tweets:  
+Here, we analyze frequency of words used in tweets by official team accounts - \@cavs and \@warriors - by looking at a bar graph. The most frequently used term in official \@cavs tweets is '\#defendtheland'. This hashtag is obviously one that the team is trying to associate itself with and make trendy so that other Twitter users may use the hashtag in reference to the Cavs. The second most frequently used term is '\#cavspacers', which is no surprise as the Round 1 games have Cavs against Pacers. Other words that appear in this chart are also very much in line with promotional tweets that \@cavs posts. As for the officials at \@warriors, notably, the most frequently used term is '\#dubnation', with which the team is trying to associate. This particular hashtag has broader precedent in the context of California, so its usage by \@warriors is strategic to reach more fans. Another notable term is perhaps 'win', which did not appear in the most frequently used words by \@cavs. This suggests that tweets from \@warriors are more positive than thos from \@cavs. Similar to tweets from \@cavs, many of the frequently used words that appear in the chart serve to inform audiences and promote viewership of games.  
+```{r,echo=F,include=T}
+load("../output/cavsO_word_ct_bar.Rdata")
+load("../output/warriorsO_word_ct_bar.Rdata")
+cavsO_word_ct_bar ; warriorsO_word_ct_bar
+```
+  
+### Sentiment Analysis:  (NRC Lexicon; 10 sentiments)  
+First, let's look at the **sentiment analysis of tweets about the Cleveland Cavaliers**. Users tweeting about the Cavs use first and foremost positive words though negative words are a close third. Clearly, we can deduce that positive sentiments are from Cavs fans. However, negative sentiment may come from fans of rival teams (perhaps specifically fans of currently opposing team, the Pacers) and disappointed fans. The second most common sentiment in tweets about the Cavs is anticipation, which is not surprising as playoff games bring about a build-up of energy and emotions. The two weakest sentiments are anger and surprise which makes sense, since the Cavs won all 4 of their Round 1 games against the Pacers. Fans don't really have anything to be angry about and fans ought not be surprised since they by virtue of  being fans expect their team to win.  
+```{r,echo=F,include=T}
+#sentiment analysis of tweets about the Cavs
+load("../output/cavsAll_senti.Rdata")
+cavsAll_senti
+```
+  
+Here are the ten most common positive words in the 3000 tweets about the Cavaliers:  
+```{r,echo=F,include=T}
+# 10 most common positive words in tweets about the Cavs
+load("../output/cavsAll_pos.Rdata")
+head(cavsAll_pos,10)
+```
+  
+Here are the ten most common negative words in the 3000 tweets about the Cavaliers:  
+```{r,echo=F,include=T}
+# 10 most common negative words in tweets about the Cavs
+load("../output/cavsAll_neg.Rdata")
+head(cavsAll_neg,10)
+```
+  
+  
+Now, let's look at the **sentiment analysis of tweets about the Golden State Warriors**. By an overwhelming amount, the positive sentiment is strongest across all the tweets about the Warriors (even stronger than positive sentiment among tweets about the Cavs, at least in terms of number of positive words). Though unlike with the tweets about the Cavs that had the sentiment negative as the thrid strongest sentiment, tweets about the Warriors have the sentiment joy as the third strongest sentiment. This further affirms that the dialogue surrounding the Warriors is generally more positive and happy than that regarding the Cavs. Similar to tweets about the Cavs, tweets about the Warriors have anticipation as the second strongest sentiment. Further notable is that trust is tied for the third strongest sentiment (along with joy) here. So, it seems those who tweet about the Warriors, presumably fans, are more confident and pleased, than those who tweet about the Cavs.  
+```{r,echo=F,include=T}
+#sentiment analysis of tweets about the Warriors
+load("../output/warriorsAll_senti.Rdata")
+warriorsAll_senti
+```
+  
+Here are the ten most common positive words in the 3000 tweets about the Warriors:  
+```{r,echo=F,include=T}
+# 10 most common positive words in tweets about the Warriors
+load("../output/warriorsAll_pos.Rdata")
+head(warriorsAll_pos,10)
+```
+  
+Here are the ten most common negative words in the 3000 tweets about the Warriors:  
+```{r,echo=F,include=T}
+# 10 most common negative words in tweets about the Warriors
+load("../output/warriorsAll_neg.Rdata")
+head(warriorsAll_neg,10)
+```
